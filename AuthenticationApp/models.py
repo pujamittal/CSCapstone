@@ -55,6 +55,8 @@ class MyUser(AbstractBaseUser):
     is_active = models.BooleanField(default=True,)
     is_admin = models.BooleanField(default=False,)
 
+    bookmarks = models.ManyToManyField("ProjectsApp.Project")
+
     # #New fields added
     # is_student = models.BooleanField(default=False,)
     # is_professor = models.BooleanField(default=False,)

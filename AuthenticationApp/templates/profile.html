@@ -12,6 +12,9 @@
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
 			</ul> -->
+			{% for bookmark in bookmarks.all %}
+				<p>{{ bookmark }}</p>
+			{% endfor %}
 		</div>
 	</div>
 

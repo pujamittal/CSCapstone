@@ -107,8 +107,8 @@ def update_profile(request):
     return render(request, 'auth_form.html', context)
 
 def view_profile(request):
-    #return request.user
     context = {
-        "user": request.user
+        "user": request.user,
+        "bookmarks": request.user.bookmarks
     }
     return render(request, 'profile.html', context)
