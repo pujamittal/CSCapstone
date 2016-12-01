@@ -13,7 +13,7 @@
 				<li>Years of Experience Needed: {{ project.experience }}</li>
 			</ul> -->
 			{% for bookmark in bookmarks.all %}
-				<p>{{ bookmark }}</p>
+				<p><a href="/project?id={{ bookmark.project_id }}">{{ bookmark }}</a></p>
 			{% endfor %}
 		</div>
 	</div>
