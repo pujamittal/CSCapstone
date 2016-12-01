@@ -16,7 +16,7 @@ class Project(models.Model):
 
     company = models.ForeignKey("CompaniesApp.Company", related_name="company", null=True)
     language = models.CharField(max_length = 50, null=True)
-    experience = models.CharField(max_length = 2, null=True)
+    experience = models.CharField(max_length = 3, null=True)
     speciality = models.CharField(max_length = 50, null=True)
 
     def __str__(self):
