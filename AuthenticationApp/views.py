@@ -53,47 +53,47 @@ def auth_register(request):
     if form.is_valid():
         usertype = form.cleaned_data['usertype']
 
-		if usertype == 'Student':
-			new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
-				password=form.cleaned_data['password2'], 
-				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
-			new_user.save()			
-			new_student = Student(user = new_user)
-			new_student.save()
-			login(request, new_user);	
-			messages.success(request, 'Success! Your student account was created.')
-			return render(request, 'index.html')
-		elif usertype == 'Teacher':
-			new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
-				password=form.cleaned_data['password2'], 
-				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
-			new_user.save()
-			new_teacher = Teacher(user=new_user, university=form.cleaned_data['university'])
-			new_teacher.save()
-			login(request, new_user);
-			messages.success(request, 'Success! Your teacher account was created.')
-			return render(request, 'index.html')
-		elif usertype == 'Engineer':
-			new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
-				password=form.cleaned_data['password2'], 
-				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
-			new_user.save()
-			new_engineer = Engineer(user=new_user)
-			new_engineer.about = form.cleaned_data['about']
-			new_engineer.almamater = form.cleaned_data['almamater']
-			new_engineer.company = form.cleaned_data['company']
-			new_engineer.save()
-			login(request, new_user);
-			messages.success(request, 'Success! Your engineer account was created.')
-			return render(request, 'index.html')
+        if usertype == 'Student':
+            new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+                password=form.cleaned_data['password2'], 
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.save()         
+            new_student = Student(user = new_user)
+            new_student.save()
+            login(request, new_user);   
+            messages.success(request, 'Success! Your student account was created.')
+            return render(request, 'index.html')
+        elif usertype == 'Teacher':
+            new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+                password=form.cleaned_data['password2'], 
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.save()
+            new_teacher = Teacher(user=new_user, university=form.cleaned_data['university'])
+            new_teacher.save()
+            login(request, new_user);
+            messages.success(request, 'Success! Your teacher account was created.')
+            return render(request, 'index.html')
+        elif usertype == 'Engineer':
+            new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+                password=form.cleaned_data['password2'], 
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.save()
+            new_engineer = Engineer(user=new_user)
+            new_engineer.about = form.cleaned_data['about']
+            new_engineer.almamater = form.cleaned_data['almamater']
+            new_engineer.company = form.cleaned_data['company']
+            new_engineer.save()
+            login(request, new_user);
+            messages.success(request, 'Success! Your engineer account was created.')
+            return render(request, 'index.html')
 
-	context = {
-		"form": form,
-		"page_name" : "Register",
-		"button_value" : "Register",
-		"links" : ["login"],
-	}
-	return render(request, 'auth_form.html', context)
+    context = {
+        "form": form,
+        "page_name" : "Register",
+        "button_value" : "Register",
+        "links" : ["login"],
+    }
+    return render(request, 'auth_form.html', context)
 
 @login_required
 def update_profile(request):
