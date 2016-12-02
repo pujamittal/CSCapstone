@@ -5,6 +5,8 @@ Created by Naman Patwari on 10/4/2016.
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django import forms
 from .models import MyUser
+from UniversitiesApp.models import University
+from CompaniesApp.models import Company
 
 class LoginForm(forms.Form):
     email = forms.CharField(label='Email')
@@ -12,15 +14,17 @@ class LoginForm(forms.Form):
 
 
 class RegisterForm(forms.Form):
-    """A form to creating new users. Includes all the required
-    fields, plus a repeated password."""
     email = forms.CharField(label='Email', widget=forms.EmailInput, required=True)
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput, required=True)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, required=True)    
 
     firstname = forms.CharField(label="First name", widget=forms.TextInput, required=False)
     lastname = forms.CharField(label="Last name", widget=forms.TextInput, required=False)
-    usertype = forms.ChoiceField([('Student', 'Student'), ('Teacher', 'Teacher'), ('Engineer', 'Engineer')], widget=forms.RadioSelect())             
+    usertype = forms.ChoiceField([('Student', 'Student'), ('Teacher', 'Teacher'), ('Engineer', 'Engineer')], label="User Type", widget=forms.RadioSelect())      
+    university = forms.ModelChoiceField(label="University", queryset=University.objects.all(), required=False)
+    about = forms.CharField(label="About", widget=forms.Textarea, required=False)
+    almamater = forms.ModelChoiceField(label="Almamater", queryset=University.objects.all(), required=False)
+    company = forms.ModelChoiceField(label="Company", queryset=Company.objects.all(), required=False)
 
     def clean_password2(self):
         # Check that the two password entries match
