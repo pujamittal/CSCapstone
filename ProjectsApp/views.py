@@ -21,7 +21,8 @@ def getProject(request):
     project_id = int(request.GET.get('id'))
     project = Project.objects.filter(project_id=project_id)[0]
     context = {
-        "project": project
+        "project": project,
+        "project_id": project_id
     }
     return render(request, 'project.html', context)
 
@@ -53,3 +54,16 @@ def getCreateProject(request):
                 "button_value": "Create Project"
             }
             return render(request, 'create_project.html', context)
+
+def getBookmarkSuccess(request):
+    if request.user.is_authenticated():
+        project_id_to_bookmark = request.GET.get('project_id', 'None')
+        proj = Project.objects.get(pk=project_id_to_bookmark)
+        request.user.bookmarks.add(proj)
+
+        context = { 
+            "name": proj.name,
+            "project_id": project_id_to_bookmark,
+        }
+
+        return render(request, 'bookmark_success.html',context)    

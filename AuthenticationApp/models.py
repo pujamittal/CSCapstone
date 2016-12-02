@@ -34,6 +34,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
+<<<<<<< HEAD
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     first_name = models.CharField(max_length=120, null=True, blank=True)    
     last_name = models.CharField(max_length=120, null=True, blank=True)
@@ -45,6 +46,35 @@ class MyUser(AbstractBaseUser):
     # is_student = models.BooleanField(default=False)
     # is_professor = models.BooleanField(default=False)
     # is_engineer = models.BooleanField(default=False)    
+=======
+    email = models.EmailField(
+        verbose_name='email address',
+        max_length=255,
+        unique=True,
+    )
+
+    first_name = models.CharField(
+    	max_length=120,
+    	null=True,
+    	blank=True,
+    	)    
+
+    last_name = models.CharField(
+    	max_length=120,
+    	null=True,
+    	blank=True,
+    	)
+
+    is_active = models.BooleanField(default=True,)
+    is_admin = models.BooleanField(default=False,)
+
+    bookmarks = models.ManyToManyField("ProjectsApp.Project")
+
+    # #New fields added
+    # is_student = models.BooleanField(default=False,)
+    # is_professor = models.BooleanField(default=False,)
+    # is_engineer = models.BooleanField(default=False,)    
+>>>>>>> 93f55a17cf1767277f139852e638ef949622f870
 
     objects = MyUserManager()
 

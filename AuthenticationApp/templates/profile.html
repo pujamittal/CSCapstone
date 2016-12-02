@@ -5,16 +5,18 @@
 	<!-- Content -->
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
-			<h1>{{ project }}</h1>
-			<p>{{ project.description }}</p>
+			<h1>{{ user.first_name }}</h1>
+			<!-- <p>{{ project.description }}</p>
 			<ul>
 				<li>Sponsored by {{ project.company }}</li>
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
-			</ul>
-			<a href="/bookmark/add?project_id={{ project_id }}" class="btn btn-default">Add Bookmark</a>
-			<!-- add in an UNDO for bookmarks -->
+			</ul> -->
+			{% for bookmark in bookmarks.all %}
+				<p><a href="/project?id={{ bookmark.project_id }}">{{ bookmark }}</a></p>
+			{% endfor %}
 		</div>
+		<a href="/update">click here to update profile</a>
 	</div>
 
 {% endblock %}
