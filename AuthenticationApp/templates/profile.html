@@ -6,18 +6,31 @@
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
 			<h1>{{ user.first_name }} {{ user.last_name }}: {{ user.email }}</h1>
-			<p>Bookmarks</p>
 			<!-- <p>{{ project.description }}</p>
 			<ul>
 				<li>Sponsored by {{ project.company }}</li>
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
 			</ul> -->
-			{% for bookmark in bookmarks.all %}
-				<p><a href="/project?id={{ bookmark.project_id }}">{{ bookmark }}</a></p>
-			{% endfor %}
+			<a href="/update" class="btn btn-info">Update Profile</a>
 		</div>
-		<a href="/update">click here to update profile</a>
+		<h1>Bookmarks</h1>
+		<div class="table-responsive">
+			<table class="table table-striped sortable">
+				<thead>
+					<tr>
+						<th>Project Name</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for bookmark in bookmarks.all %} 
+					<tr>
+						<td><p><a href="/project?id={{ bookmark.project_id }}">{{ bookmark }}</a></p></td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 	</div>
 
 {% endblock %}
