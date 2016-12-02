@@ -10,7 +10,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email=None, password=None, first_name=None, last_name=None):
+    def create_user(self, email=None, password=None, first_name=None, last_name=None, is_student=None, is_teacher=None, is_engineer=None):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -43,10 +43,9 @@ class MyUser(AbstractBaseUser):
 
     bookmarks = models.ManyToManyField("ProjectsApp.Project")
 
-    # New fields added
-    # is_student = models.BooleanField(default=False)
-    # is_professor = models.BooleanField(default=False)
-    # is_engineer = models.BooleanField(default=False)    
+    is_student = models.BooleanField(default=False)
+    is_teacher = models.BooleanField(default=False)
+    is_engineer = models.BooleanField(default=False)    
 
     objects = MyUserManager()
 
