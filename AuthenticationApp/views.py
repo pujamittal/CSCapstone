@@ -11,7 +11,7 @@ from django.contrib import messages
 
 
 from .forms import LoginForm, RegisterForm, UpdateForm
-from .models import MyUser, Student, Teacher
+from .models import MyUser, Student, Teacher, Engineer
 
 # Auth Views
 
@@ -57,8 +57,7 @@ def auth_register(request):
 			new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
 				password=form.cleaned_data['password2'], 
 				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
-			new_user.save()	
-			#Also registering students		
+			new_user.save()			
 			new_student = Student(user = new_user)
 			new_student.save()
 			login(request, new_user);	
@@ -69,20 +68,25 @@ def auth_register(request):
 				password=form.cleaned_data['password2'], 
 				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
 			new_user.save()
-			new_teacher = Teacher(user=new_user)
+			new_teacher = Teacher(user=new_user, university=form.cleaned_data['university'])
 			new_teacher.save()
 			login(request, new_user);
 			messages.success(request, 'Success! Your teacher account was created.')
 			return render(request, 'index.html')
 		elif usertype == 'Engineer':
-			# TODO
-			context = {
-				"form": form,
-				"page_name" : "Register",
-				"button_value" : "Register",
-				"links" : ["login"],
-			}
-			return render(request, 'auth_form.html', context)
+			new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
+				password=form.cleaned_data['password2'], 
+				first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+			new_user.save()
+			new_engineer = Engineer(user=new_user)
+			new_engineer.about = form.cleaned_data['about']
+			new_engineer.almamater = form.cleaned_data['almamater']
+			new_engineer.company = form.cleaned_data['company']
+			new_engineer.save()
+			login(request, new_user);
+			messages.success(request, 'Success! Your engineer account was created.')
+			return render(request, 'index.html')
+
 	context = {
 		"form": form,
 		"page_name" : "Register",

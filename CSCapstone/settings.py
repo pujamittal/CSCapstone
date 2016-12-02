@@ -42,8 +42,7 @@ INSTALLED_APPS = [
     'CompaniesApp',
     'AuthenticationApp',
     'GroupsApp',
-	'UniversitiesApp',
-    'TeachersApp',
+	'UniversitiesApp'
 ]
 
 MIDDLEWARE = [
