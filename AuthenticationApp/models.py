@@ -10,7 +10,7 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 class MyUserManager(BaseUserManager):
-    def create_user(self, email=None, password=None, first_name=None, last_name=None, is_student=None, is_teacher=None, is_engineer=None):
+    def create_user(self, email=None, password=None, first_name=None, last_name=None):
         if not email:
             raise ValueError('Users must have an email address')
 

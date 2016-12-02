@@ -56,7 +56,8 @@ def auth_register(request):
         if usertype == 'Student':
             new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password2'], 
-                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'], is_student=True)
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.is_student = True
             new_user.save()         
             new_student = Student(user = new_user)
             new_student.save()
@@ -66,7 +67,8 @@ def auth_register(request):
         elif usertype == 'Teacher':
             new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password2'], 
-                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'], is_teacher=True)
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.is_teacher = True
             new_user.save()
             new_teacher = Teacher(user=new_user, university=form.cleaned_data['university'])
             new_teacher.save()
@@ -76,7 +78,8 @@ def auth_register(request):
         elif usertype == 'Engineer':
             new_user = MyUser.objects.create_user(email=form.cleaned_data['email'], 
                 password=form.cleaned_data['password2'], 
-                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'], is_engineer=True)
+                first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
+            new_user.is_engineer = True
             new_user.save()
             new_engineer = Engineer(user=new_user)
             new_engineer.about = form.cleaned_data['about']
