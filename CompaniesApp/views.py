@@ -33,32 +33,38 @@ def getCompany(request):
 
 def getCompanyForm(request):
     if request.user.is_authenticated():
-        return render(request, 'companyform.html')
-    # render error page if user is not logged in
+        if request.user.is_admin == True:
+            return render(request, 'companyform.html')
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to create a company." })
+
     return render(request, 'autherror.html')
 
 def getCompanyFormSuccess(request):
     if request.user.is_authenticated():
-        if request.method == 'POST':
-            form = forms.CompanyForm(request.POST, request.FILES)
-            if form.is_valid():
-                if models.Company.objects.filter(name__exact=form.cleaned_data['name']).exists():
-                    return render(request, 'companyform.html', {'error' : 'Error: That company name already exists!'})
-                new_company = models.Company(name=form.cleaned_data['name'], 
-                                             photo=request.FILES['photo'],  
-                                             description=form.cleaned_data['description'],
-                                             website=form.cleaned_data['website'])
-                new_company.save()
-                context = {
-                    'name' : form.cleaned_data['name'],
-                }
-                return render(request, 'companyformsuccess.html', context)
+        if request.user.is_admin == True:
+            if request.method == 'POST':
+                form = forms.CompanyForm(request.POST, request.FILES)
+                if form.is_valid():
+                    if models.Company.objects.filter(name__exact=form.cleaned_data['name']).exists():
+                        return render(request, 'companyform.html', {'error' : 'Error: That company name already exists!'})
+                    new_company = models.Company(name=form.cleaned_data['name'], 
+                                                 photo=request.FILES['photo'],  
+                                                 description=form.cleaned_data['description'],
+                                                 website=form.cleaned_data['website'])
+                    new_company.save()
+                    context = {
+                        'name' : form.cleaned_data['name'],
+                    }
+                    return render(request, 'companyformsuccess.html', context)
+                else:
+                    return render(request, 'companyform.html', {'error' : 'Error: Photo upload failed!'})
             else:
-                return render(request, 'companyform.html', {'error' : 'Error: Photo upload failed!'})
+                form = forms.CompanyForm()
+            return render(request, 'companyform.html')
         else:
-            form = forms.CompanyForm()
-        return render(request, 'companyform.html')
-    # render error page if user is not logged in
+            return render(request, 'baseerror.html', { "message": "You do not have permission to create a company." })
+
     return render(request, 'autherror.html')
 
 def joinCompany(request):
