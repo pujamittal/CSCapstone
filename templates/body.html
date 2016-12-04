@@ -20,7 +20,19 @@
 					<li><a href="/login">Login</a></li>
 					<li><a href="/register">Register</a></li>
 				{% else %}
-					<li><a href="/profile">Profile</a></li>
+					<li><a href="/profile?id={{ user.id }}">Profile</a></li>
+					{% if user.is_admin == True %}
+						<li role="presentation" class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+							  Users <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="/student/all">Students</a></li>
+								<li><a href="/teacher/all">Teachers</a></li>
+								<li><a href="/engineer/all">Engineers</a></li>
+							</ul>
+						</li>
+					{% endif %}
 					<li role="presentation" class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 						  Groups/Organizations <span class="caret"></span>

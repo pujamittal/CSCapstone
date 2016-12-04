@@ -100,22 +100,77 @@ def auth_register(request):
 
 @login_required
 def update_profile(request):
-    form = UpdateForm(request.POST or None, instance=request.user)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Success, your profile was saved!')
+    user_id = int(request.GET.get('id'))
+    user = MyUser.objects.filter(id=user_id)[0]
+    
+    if int(request.user.id) == user_id or request.user.is_admin == True:
+        form = UpdateForm(request.POST or None, instance=user)
 
-    context = {
-        "form": form,
-        "page_name" : "Update",
-        "button_value" : "Update",
-        "links" : ["logout"],
-    }
-    return render(request, 'auth_form.html', context)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Success, your profile was saved!')
+
+        context = {
+            "form": form,
+            "page_name" : "Update",
+            "button_value" : "Update",
+            "links" : ["logout"],
+        }
+        return render(request, 'auth_form.html', context)
+    else:
+        context = {
+            "message": "You do not have permission to update this profile" 
+        }
+        return render(request, 'baseerror.html', context)
 
 def view_profile(request):
-    context = {
-        "user": request.user,
-        "bookmarks": request.user.bookmarks
-    }
-    return render(request, 'profile.html', context)
+    user_id = int(request.GET.get('id'))
+    user = MyUser.objects.filter(id=user_id)[0]
+
+    if user.is_admin == True and request.user.is_admin == True:
+        context = {
+            "user": user, 
+            "bookmarks": user.bookmarks
+        }
+        return render(request, 'profile.html', context)
+    elif user.is_admin == False:
+        context = {
+            "user": user, 
+            "bookmarks": user.bookmarks
+        }
+        return render(request, 'profile.html', context)
+    else:
+        context = {
+            "message": "You cannot access this profile."
+        }
+        return render(request, 'baseerror.html', context)
+
+def getStudents(request):
+    user_list = []
+    try:
+        user_list = Student.objects.all()
+    except Exception as ex:
+        pass
+    return render(request, 'students.html', {
+        'users': user_list
+    })
+
+def getTeachers(request):
+    user_list = []
+    try:
+        user_list = Teacher.objects.all()
+    except Exception as ex:
+        pass
+    return render(request, 'teachers.html', {
+        'users': user_list
+    })
+
+def getEngineers(request):
+    user_list = []
+    try:
+        user_list = Engineer.objects.all()
+    except Exception as ex:
+        pass
+    return render(request, 'engineers.html', {
+        'users': user_list
+    })

@@ -13,4 +13,7 @@ urlpatterns = [
     url(r'^register$', views.auth_register, name='Register'),
     url(r'^update$', views.update_profile, name='UpdateProfile'),    
     url(r'^profile$', views.view_profile, name='ViewProfile'),
+    url(r'^student/all$', views.getStudents, name='GetStudents'),
+    url(r'^teacher/all$', views.getTeachers, name='GetTeachers'),
+    url(r'^engineer/all$', views.getEngineers, name='GetEngineers'),
 ]
