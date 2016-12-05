@@ -1,4 +1,5 @@
 {% extends "body.html" %}
+{% load staticfiles %}
 
 {% block head_title %}{{ page_name }} | {% endblock %}
 
@@ -13,4 +14,8 @@
 	</div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/register_form.js' %}"></script>
 {% endblock %}

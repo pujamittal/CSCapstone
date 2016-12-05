@@ -83,6 +83,7 @@ class MyUser(AbstractBaseUser):
 
 class Student(models.Model):
     user = models.OneToOneField(MyUser, on_delete=models.CASCADE, primary_key=True)
+    university = models.ForeignKey("UniversitiesApp.University", related_name="student_university", null=True)
 
     def get_full_name(self):        
         return "%s %s" %(self.user.first_name, self.user.last_name)

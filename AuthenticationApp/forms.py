@@ -18,13 +18,13 @@ class RegisterForm(forms.Form):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput, required=True)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, required=True)    
 
-    firstname = forms.CharField(label="First name", widget=forms.TextInput, required=False)
-    lastname = forms.CharField(label="Last name", widget=forms.TextInput, required=False)
-    usertype = forms.ChoiceField([('Student', 'Student'), ('Teacher', 'Teacher'), ('Engineer', 'Engineer')], label="User Type", widget=forms.RadioSelect())      
+    firstname = forms.CharField(label="First name", widget=forms.TextInput, required=True)
+    lastname = forms.CharField(label="Last name", widget=forms.TextInput, required=True)
+    usertype = forms.ChoiceField([('Student', 'Student'), ('Teacher', 'Teacher'), ('Engineer', 'Engineer')], label="User Type", widget=forms.RadioSelect(), required=True)      
     university = forms.ModelChoiceField(label="University", queryset=University.objects.all(), required=False)
-    about = forms.CharField(label="About", widget=forms.Textarea, required=False)
-    almamater = forms.ModelChoiceField(label="Almamater", queryset=University.objects.all(), required=False)
     company = forms.ModelChoiceField(label="Company", queryset=Company.objects.all(), required=False)
+    almamater = forms.ModelChoiceField(label="Almamater", queryset=University.objects.all(), required=False)
+    about = forms.CharField(label="About", widget=forms.Textarea, required=False)
 
     def clean_password2(self):
         # Check that the two password entries match

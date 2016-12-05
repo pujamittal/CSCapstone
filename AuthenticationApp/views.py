@@ -57,7 +57,7 @@ def auth_register(request):
                 first_name=form.cleaned_data['firstname'], last_name=form.cleaned_data['lastname'])
             new_user.is_student = True
             new_user.save()         
-            new_student = Student(user = new_user)
+            new_student = Student(user=new_user, university=form.cleaned_data['university'])
             new_student.save()
             login(request, new_user);   
             messages.success(request, 'Success! Your student account was created.')

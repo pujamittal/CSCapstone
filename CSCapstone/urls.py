@@ -1,10 +1,5 @@
-"""CSCapstone Master URL Configuration
+#CSCapstone Master URL Configuration
 
-Created by Harris Christiansen on 9/18/16.
-
-For more information please see:
-    https://docs.djangoproject.com/en/1.10/topics/http/urls/
-"""
 from django.conf.urls import url, include
 from django.contrib import admin
 
