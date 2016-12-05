@@ -6,13 +6,28 @@
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
 			<h1>{{ user.first_name }} {{ user.last_name }}</h1>
-			<h2>{{ user.email }}</h2>
+			<h2><strong>Type: </strong>{{ usertype }}</h2>
+			<h2><strong>Email: </strong>{{ user.email }}</h2>
+			{% if user.is_student == True %}
+				<h2><strong>University: </strong><a href="/university?name={{ user.student.university.name }}">{{ user.student.university.name }}</a></h2>
+			{% endif %}
+			{% if user.is_teacher == True %}
+				<h2><strong>University: </strong><a href="/university?name={{ user.teacher.university.name }}">{{ user.teacher.university.name }}</a></h2>
+			{% endif %}
+			{% if user.is_engineer == True %}
+				<h2><strong>Almamater: </strong><a href="/university?name={{ user.engineer.almamater.name }}">{{ user.engineer.almamater.name }}</a></h2>
+				<!-- TODO: fix this link-->
+				<h2><strong>Company: </strong><a href="/university?name={{ user.engineer.company.name }}">{{ user.engineer.company.name }}</a></h2>
+				<h2><strong>About: </strong>{{ user.engineer.about }}</h2>
+			{% endif %}
+
 			<!-- <p>{{ project.description }}</p>
 			<ul>
 				<li>Sponsored by {{ project.company }}</li>
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
 			</ul> -->
+			<br><br>
 			<a href="/update?id={{ user.id }}" class="btn btn-info">Update Profile</a>
 		</div>
 		<h1>Bookmarks</h1>

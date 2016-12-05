@@ -7,6 +7,7 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
+from AuthenticationApp.models import Student, Teacher, Engineer
 
 def getUniversities(request):
     if request.user.is_authenticated():
@@ -63,32 +64,52 @@ def getUniversityFormSuccess(request):
 
 def joinUniversity(request):
     if request.user.is_authenticated():
-        in_name = request.GET.get('name', 'None')
-        in_university = models.University.objects.get(name__exact=in_name)
-        in_university.members.add(request.user)
-        in_university.save();
-        request.user.university_set.add(in_university)
-        request.user.save()
-        context = {
-            'university' : in_university,
-            'userIsMember': True,
-        }
-        return render(request, 'university.html', context)
+        if (request.user.is_student == True or request.user.is_teacher == True or request.user.is_admin == True):
+            in_name = request.GET.get('name', 'None')
+            in_university = models.University.objects.get(name__exact=in_name)
+            in_university.members.add(request.user)
+            in_university.save();
+
+            if request.user.is_student == True:
+                student = request.user.student
+                student.university = in_university
+                student.save()
+            elif request.user.is_teacher == True:
+                teacher = request.user.teacher
+                teacher.university = in_university
+                teacher.save()
+            context = {
+                'university' : in_university,
+                'userIsMember': True,
+            }
+            return render(request, 'university.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "You cannot join a university." })
     return render(request, 'autherror.html')
     
 def unjoinUniversity(request):
     if request.user.is_authenticated():
-        in_name = request.GET.get('name', 'None')
-        in_university = models.University.objects.get(name__exact=in_name)
-        in_university.members.remove(request.user)
-        in_university.save();
-        request.user.university_set.remove(in_university)
-        request.user.save()
-        context = {
-            'university' : in_university,
-            'userIsMember': False,
-        }
-        return render(request, 'university.html', context)
+        if (request.user.is_student == True or request.user.is_teacher == True or request.user.is_admin == True):
+            in_name = request.GET.get('name', 'None')
+            in_university = models.University.objects.get(name__exact=in_name)
+            in_university.members.remove(request.user)
+            in_university.save();
+
+            if request.user.is_student == True:
+                student = request.user.student
+                student.university = None
+                student.save()
+            elif request.user.is_teacher == True:
+                teacher = request.user.teacher
+                teacher.university = None
+                teacher.save()
+            context = {
+                'university' : in_university,
+                'userIsMember': False,
+            }
+            return render(request, 'university.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "You cannot perform this action." })
     return render(request, 'autherror.html')
     
 def getCourse(request):
