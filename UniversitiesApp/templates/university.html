@@ -7,7 +7,7 @@
             <img src="/{{ university.photo }}" alt="University Image" width=150/>
 			<h3>{{ university.name }}</h3>
 			<p>{{ university.description }}</p>
-            <h5><a href="{{ university.website }}">Website</a></h5>
+            <h3><a href="{{ university.website }}">Website</a></h3>
             {% if userIsMember %}
             <a href="/university/unjoin?name={{ university.name }}" class="btn btn-default">Unjoin this University</a>
             {% else %}
@@ -20,14 +20,34 @@
 			<table class="table table-striped sortable">
 				<thead>
 					<tr>
-						<th>Users</th>
+						<th>Teachers</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in university.members.all %}
+						{% if item.is_teacher == True %}
+							<tr>
+								<td>{{ item.get_full_name }}</td>
+							</tr>
+						{% endif %}
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped sortable">
+				<thead>
 					<tr>
-						<td>{{ item.get_full_name }}</td>
+						<th>Students</th>
 					</tr>
+				</thead>
+				<tbody>
+					{% for item in university.members.all %}
+						{% if item.is_student == True %}
+							<tr>
+								<td>{{ item.get_full_name }}</td>
+							</tr>
+						{% endif %}
 					{% endfor %}
 				</tbody>
 			</table>
