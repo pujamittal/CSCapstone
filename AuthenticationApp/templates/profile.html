@@ -16,8 +16,7 @@
 			{% endif %}
 			{% if user.is_engineer == True %}
 				<h2><strong>Almamater: </strong><a href="/university?name={{ user.engineer.almamater.name }}">{{ user.engineer.almamater.name }}</a></h2>
-				<!-- TODO: fix this link-->
-				<h2><strong>Company: </strong><a href="/university?name={{ user.engineer.company.name }}">{{ user.engineer.company.name }}</a></h2>
+				<h2><strong>Company: </strong><a href="/company?name={{ user.engineer.company.name }}">{{ user.engineer.company.name }}</a></h2>
 				<h2><strong>About: </strong>{{ user.engineer.about }}</h2>
 			{% endif %}
 
