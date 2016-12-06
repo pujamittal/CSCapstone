@@ -29,8 +29,27 @@
 			<br><br>
 			<a href="/update?id={{ user.id }}" class="btn btn-info">Update Profile</a>
 		</div>
+		{% if user.is_student == True %}
+			<h1>Groups</h1>
+			<div class="table-responsive">
+				<table class="table table-striped sortable">
+					<thead>
+						<tr>
+							<th>Group Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for group in groups.all %}
+							<tr>
+								<td><p><a href="/group?name={{ group.name }}">{{ group }}</a></p></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
 		<h1>Bookmarks</h1>
-		<div class="table-responsive">
+		<div class="table-reonsive">
 			<table class="table table-striped sortable">
 				<thead>
 					<tr>

@@ -66,4 +66,4 @@ def getBookmarkSuccess(request):
             "project_id": project_id_to_bookmark,
         }
 
-        return render(request, 'bookmark_success.html',context)    
+        return render(request, 'bookmark_success.html', context)    

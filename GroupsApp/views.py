@@ -32,103 +32,122 @@ def getGroup(request):
 
 def getGroupForm(request):
     if request.user.is_authenticated():
-        projects_list = models.Project.objects.all()
-        return render(request, 'groupform.html',{
-        'projects': projects_list,
-    })
+        if request.user.is_student == True or request.user.is_admin == True:
+            projects_list = models.Project.objects.all()
+            return render(request, 'groupform.html',{ 'projects': projects_list })
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to create a group." })
     # render error page if user is not logged in
     return render(request, 'autherror.html')
 
 def getGroupFormSuccess(request):
     if request.user.is_authenticated():
-        if request.method == 'POST':
-            form = forms.GroupForm(request.POST)
-            if form.is_valid():
-                if models.Group.objects.filter(name__exact=form.cleaned_data['name']).exists():
-                    return render(request, 'groupform.html', {'error' : 'Error: That Group name already exists!'})
-                new_group = models.Group(name=form.cleaned_data['name'], description=form.cleaned_data['description'])
-                try:
-                    project = models.Project.objects.get(project_id=form.cleaned_data['project'])
-                except ObjectDoesNotExist:
-                    return render(request, 'groupform.html', {'error': 'Error: That project does not exist!'})
-                new_group.project = project
-                new_group.save()
-                new_group.members.add(request.user)
-                new_group.save()
-                context = {
-                    'name' : form.cleaned_data['name'],
-                }
-                return render(request, 'groupformsuccess.html', context)
+        if request.user.is_student == True or request.user.is_admin == True:
+            if request.method == 'POST':
+                form = forms.GroupForm(request.POST)
+                if form.is_valid():
+                    if models.Group.objects.filter(name__exact=form.cleaned_data['name']).exists():
+                        return render(request, 'groupform.html', {'error' : 'Error: That Group name already exists!'})
+                    new_group = models.Group(name=form.cleaned_data['name'], description=form.cleaned_data['description'])
+                    try:
+                        project = models.Project.objects.get(project_id=form.cleaned_data['project'])
+                    except ObjectDoesNotExist:
+                        return render(request, 'groupform.html', {'error': 'Error: That project does not exist!'})
+                    new_group.project = project
+                    new_group.save()
+                    new_group.members.add(request.user)
+                    new_group.save()
+                    context = {
+                        'name' : form.cleaned_data['name'],
+                    }
+                    return render(request, 'groupformsuccess.html', context)
+            else:
+                form = forms.GroupForm()
+            return render(request, 'groupform.html')
         else:
-            form = forms.GroupForm()
-        return render(request, 'groupform.html')
+            return render(request, 'baseerror.html', { "message": "You do not have permission to create a group." })
     # render error page if user is not logged in
     return render(request, 'autherror.html')
 
 def joinGroup(request):
     if request.user.is_authenticated():
-        in_name = request.GET.get('name', 'None')
-        in_group = models.Group.objects.get(name__exact=in_name)
-        in_group.members.add(request.user)
-        in_group.save();
-        request.user.group_set.add(in_group)
-        request.user.save()
-        context = {
-            'group' : in_group,
-            'userIsMember': True,
-        }
-        return render(request, 'group.html', context)
+        if request.user.is_student == True or request.user.is_admin == True:
+            in_name = request.GET.get('name', 'None')
+            in_group = models.Group.objects.get(name__exact=in_name)
+            in_group.members.add(request.user)
+            in_group.save()
+            request.user.student.groups.add(in_group)
+            request.user.student.save()
+            context = {
+                'group' : in_group,
+                'userIsMember': True,
+            }
+            return render(request, 'group.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "Only students can join groups." })
     return render(request, 'autherror.html')
     
 def unjoinGroup(request):
     if request.user.is_authenticated():
-        in_name = request.GET.get('name', 'None')
-        in_group = models.Group.objects.get(name__exact=in_name)
-        in_group.members.remove(request.user)
-        in_group.save();
-        request.user.group_set.remove(in_group)
-        request.user.save()
-        context = {
-            'group' : in_group,
-            'userIsMember': False,
-        }
-        return render(request, 'group.html', context)
+        if request.user.is_student == True or request.user.is_admin == True:
+            in_name = request.GET.get('name', 'None')
+            in_group = models.Group.objects.get(name__exact=in_name)
+            in_group.members.remove(request.user)
+            in_group.save();
+            request.user.student.groups.remove(in_group)
+            request.user.student.save()
+            context = {
+                'group' : in_group,
+                'userIsMember': False,
+            }
+            return render(request, 'group.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "Only students can join groups." })
     return render(request, 'autherror.html')
-
 
 def getGroupAddMemberForm(request):
     if request.user.is_authenticated():
-        context = {
-            'name': request.GET.get('name', ''),
-        }
-        return render(request, 'groupaddmemberform.html',context)
-    # render error page if user is not logged in
+        if request.user.is_student == True or request.user.is_admin == True:
+            group_name = request.GET.get('name', 'None')
+            group = models.Group.objects.get(name__exact=group_name)
+            is_member = group.members.filter(email__exact=request.user.email)
 
+            if not is_member:
+                return render(request, 'baseerror.html', {"message": "Only members of this group can add members." })
+            else:
+                context = {
+                    'name': request.GET.get('name', ''),
+                }
+                return render(request, 'groupaddmemberform.html',context)
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to add members." })   
     return render(request, 'autherror.html')
 
 def getGroupAddMemberFormSuccess(request):
-    # return None
     if request.user.is_authenticated():
-        if request.method == 'POST':
-            form = forms.GroupAddMemberForm(request.POST)
-            if form.is_valid():
-                group_to_join = models.Group.objects.get(name__exact=form.cleaned_data['name'])
-                try:
-                    user = models.MyUser.objects.get(email__exact=form.cleaned_data['email'])
-                except ObjectDoesNotExist:
-                    return render(request, 'groupaddmemberform.html', {'error': 'Error: That user does not exist!'})
+        if request.user.is_student == True or request.user.is_admin == True:
+            if request.method == 'POST':
+                form = forms.GroupAddMemberForm(request.POST)
+                if form.is_valid():
+                    group_to_join = models.Group.objects.get(name__exact=form.cleaned_data['name'])
+                    try:
+                        user = models.MyUser.objects.get(email__exact=form.cleaned_data['email'])
+                    except ObjectDoesNotExist:
+                        return render(request, 'groupaddmemberform.html', {'error': 'Error: That user does not exist!'})
 
-                group_to_join.members.add(user)
-                group_to_join.save()
-                user.group_set.add(group_to_join)
-                user.save()
-                context = {
-                    'name' : form.cleaned_data['name'],
-                    'email' : form.cleaned_data['email'],
-                }
-                return render(request, 'groupaddmemberformsuccess.html', context)
+                    group_to_join.members.add(user)
+                    group_to_join.save()
+                    user.student.groups_set.add(group_to_join)
+                    user.save()
+                    context = {
+                        'name' : form.cleaned_data['name'],
+                        'email' : form.cleaned_data['email'],
+                    }
+                    return render(request, 'groupaddmemberformsuccess.html', context)
+            else:
+                form = forms.GroupForm()
+            return render(request, 'groupaddmemberform.html')
         else:
-            form = forms.GroupForm()
-        return render(request, 'groupaddmemberform.html')
+            return render(request, 'baseerror.html', { "message": "You do not have permission to add members." })
     # render error page if user is not logged in
     return render(request, 'autherror.html')

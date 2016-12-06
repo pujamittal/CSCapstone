@@ -145,27 +145,34 @@ def view_profile(request):
         user_id = int(request.GET.get('id'))
         user = MyUser.objects.filter(id=user_id)[0]
         usertype = "Admin"
+        context = {}
 
         if user.is_student == True:
             usertype = "Student"
+            context = {
+                "user": user, 
+                "bookmarks": user.bookmarks,
+                "usertype": usertype,
+                "groups": user.student.groups
+            }
         elif user.is_teacher == True:
             usertype = "Teacher"
+            context = {
+                "user": user, 
+                "bookmarks": user.bookmarks,
+                "usertype": usertype
+            }
         elif user.is_engineer == True:
             usertype = "Engineer"
+            context = {
+                "user": user, 
+                "bookmarks": user.bookmarks,
+                "usertype": usertype
+            }
 
         if user.is_admin == True and request.user.is_admin == True:
-            context = {
-                "user": user, 
-                "bookmarks": user.bookmarks,
-                "usertype": usertype
-            }
             return render(request, 'profile.html', context)
         elif user.is_admin == False:
-            context = {
-                "user": user, 
-                "bookmarks": user.bookmarks,
-                "usertype": usertype
-            }
             return render(request, 'profile.html', context)
         else:
             context = {
