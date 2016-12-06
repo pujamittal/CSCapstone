@@ -106,6 +106,21 @@ def update_profile(request):
             form = UpdateForm(request.POST or None, instance=user)
 
             if form.is_valid():
+                if user.is_student == True:
+                    student = user.student
+                    student.university = form.cleaned_data['university']
+                    student.save()
+                if user.is_teacher == True:
+                    teacher = user.teacher
+                    teacher.university = form.cleaned_data['university']
+                    teacher.save()
+                if user.is_engineer == True:
+                    engineer = user.engineer
+                    engineer.almamater = form.cleaned_data['almamater']
+                    engineer.company = form.cleaned_data['company']
+                    engineer.about = form.cleaned_data['about']
+                    engineer.save()
+
                 form.save()
                 messages.success(request, 'Success, your profile was saved!')
 
@@ -114,8 +129,9 @@ def update_profile(request):
                 "page_name" : "Update",
                 "button_value" : "Update",
                 "links" : ["logout"],
+                "user": request.user
             }
-            return render(request, 'auth_form.html', context)
+            return render(request, 'update_form.html', context)
         else:
             context = {
                 "message": "You do not have permission to update this profile" 

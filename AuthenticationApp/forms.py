@@ -46,11 +46,11 @@ class RegisterForm(forms.Form):
             raise forms.ValidationError("There was an error, please contact us later")
 
 class UpdateForm(forms.ModelForm):
-    """A form for updating users. Includes all the fields on
-    the user, but replaces the password field with admin's
-    password hash display field.
-    """
     password = ReadOnlyPasswordHashField()
+    university = forms.ModelChoiceField(label="University", queryset=University.objects.all(), required=False)
+    company = forms.ModelChoiceField(label="Company", queryset=Company.objects.all(), required=False)
+    almamater = forms.ModelChoiceField(label="Almamater", queryset=University.objects.all(), required=False)
+    about = forms.CharField(label="About", widget=forms.Textarea, required=False)
 
     class Meta:
         model = MyUser        
@@ -81,7 +81,37 @@ class UpdateForm(forms.ModelForm):
             return email[:email.find("@")]      
         return first_name
    
+class UpdateFormStudent(forms.ModelForm):
+    password = ReadOnlyPasswordHashField()
 
+    class Meta:
+        model = MyUser        
+        fields = ('email', 'password', 'first_name', 'last_name')
+
+    def clean_password(self):            
+        return self.initial["password"]        
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        #Check is email has changed
+        if email == self.initial["email"]:
+            return email
+        #Check if email exists before
+        try:
+            exists = MyUser.objects.get(email=email)
+            raise forms.ValidationError("This email has already been taken")
+        except MyUser.DoesNotExist:
+            return email
+        except:
+            raise forms.ValidationError("There was an error, please contact us later")
+
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name")
+        #Check is email has changed
+        if first_name is None or first_name == "" or first_name == '':  
+            email = self.cleaned_data.get("email")                               
+            return email[:email.find("@")]      
+        return first_name
 
 """Admin Forms"""
 

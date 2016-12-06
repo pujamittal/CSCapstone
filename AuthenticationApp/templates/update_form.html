@@ -1,0 +1,30 @@
+{% extends "body.html" %}
+{% load staticfiles %}
+
+{% block head_title %}{{ page_name }} | {% endblock %}
+
+{% block content %}
+
+<div class="container" role="main">
+    <div class="panel panel-default">
+        <form method="POST" class="panel-body validate"> {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class='btn btn-primary' value="{{ button_value }}">
+        </form>
+    </div>
+</div>
+{% if user.is_student == True %}
+    <div id="is_student"></div>
+{% endif %}
+{% if user.is_teacher == True %}
+    <div id="is_teacher"></div>
+{% endif %}
+{% if user.is_engineer == True %}
+    <div id="is_engineer"></div>
+{% endif %}
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="{% static 'js/update_form.js' %}"></script>
+{% endblock %}
