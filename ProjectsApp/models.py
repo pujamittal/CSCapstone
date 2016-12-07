@@ -9,6 +9,7 @@ class Project(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=10000)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey("AuthenticationApp.MyUser")
     updated_at = models.DateTimeField(auto_now=True)
 
     # TODO Task 3.5: Add field for company relationship

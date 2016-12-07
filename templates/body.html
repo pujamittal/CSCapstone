@@ -65,7 +65,7 @@
 						</a>
 							<ul class="dropdown-menu">
 								<li><a href="/project/all">View Projects</a></li>
-								{% if user.is_engineer == True %}
+								{% if user.is_engineer == True or user.is_admin == True %}
 									<li><a href="/create_project">Create Project</a></li>
 								{% endif %}
 							</ul>

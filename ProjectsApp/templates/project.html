@@ -13,6 +13,9 @@
 				<li>Years of Experience Needed: {{ project.experience }}</li>
 			</ul>
 			<a href="/bookmark/add?project_id={{ project_id }}" class="btn btn-default">Add Bookmark</a>
+			{% if is_owner == True %}
+				<a href="/project/edit?id={{ project_id }}" class="btn btn-default">Edit Project</a>
+			{% endif %}
 			<!-- add in an UNDO for bookmarks -->
 		</div>
 	</div>

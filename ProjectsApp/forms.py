@@ -30,3 +30,18 @@ class CreateProjectForm(forms.ModelForm):
     # language = forms.CharField(label='Language(s)', widget=forms.TextInput, required=False)
     # experience = forms.CharField(label='Years of Experience', widget=forms.TextInput, required=False)
     # speciality = forms.CharField(label='Speciality', widget=forms.TextInput, required=False)
+
+class ProjectEditForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = [
+            'name',
+            'description',
+            'company',
+            'language',
+            'experience',
+            'speciality'
+        ]
+        labels = {
+            'experience' : 'Years of Experience'
+        }
