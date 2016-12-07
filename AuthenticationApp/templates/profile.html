@@ -47,6 +47,42 @@
 					</tbody>
 				</table>
 			</div>
+			<h1>Classes</h1>
+			<div class="table-responsive">
+				<table class="table table-striped sortable">
+					<thead>
+						<tr>
+							<th>Class Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for class in classes.all %}
+							<tr>
+								<td><p><a href="university/course?name={{ class.university.name }}&course={{ class.tag }}">{{ class.tag }}</a></p></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+		{% if user.is_teacher == True %}
+			<h1>Classes</h1>
+			<div class="table-responsive">
+				<table class="table table-striped sortable">
+					<thead>
+						<tr>
+							<th>Class Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for class in classes.all %}
+							<tr>
+								<td><p><a href="university/course?name={{ class.university.name }}&course={{ class.tag }}">{{ class.tag }}</a></p></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
 		{% endif %}
 		<h1>Bookmarks</h1>
 		<div class="table-reonsive">

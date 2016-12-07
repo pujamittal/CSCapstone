@@ -153,14 +153,16 @@ def view_profile(request):
                 "user": user, 
                 "bookmarks": user.bookmarks,
                 "usertype": usertype,
-                "groups": user.student.groups
+                "groups": user.student.groups,
+                "classes": user.student.classes
             }
         elif user.is_teacher == True:
             usertype = "Teacher"
             context = {
                 "user": user, 
                 "bookmarks": user.bookmarks,
-                "usertype": usertype
+                "usertype": usertype,
+                "classes": user.teacher.classes
             }
         elif user.is_engineer == True:
             usertype = "Engineer"

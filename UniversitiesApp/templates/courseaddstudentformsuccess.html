@@ -1,0 +1,13 @@
+{% extends "body.html" %}
+
+{% block content %}
+    <meta http-equiv="refresh" content="1;url=/university/course?name={{ university_name }}&course={{ tag }}"/>
+    <!-- Content -->
+    <div class="container theme-showcase" role="main">
+        <div class="jumbotron">
+            <h2>{{ email }} added to group {{ name }}!</h2>
+            <p>This page will redirect momentarily...if it does not <a href="/university/course?name={{ university_name }}&tag={{ name }}">click here!</a></p>
+        </div>
+    </div>
+
+{% endblock %}

@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 from . import models
 from . import forms
-from AuthenticationApp.models import Student, Teacher, Engineer
+from AuthenticationApp.models import MyUser, Student, Teacher, Engineer
 
 def getUniversities(request):
     if request.user.is_authenticated():
@@ -119,10 +119,13 @@ def getCourse(request):
         in_course_tag = request.GET.get('course', 'None')
         in_course = in_university.course_set.get(tag__exact=in_course_tag)
         is_member = in_course.members.filter(email__exact=request.user.email)
+        is_owner = True if request.user.is_teacher == True and is_member is not None else False
+
         context = {
-            'university' : in_university,
-            'course' : in_course,
-            'userInCourse' : is_member,
+            'university': in_university,
+            'course': in_course,
+            'userInCourse': is_member,
+            'is_owner': is_owner
         }
         return render(request, 'course.html', context)
     return render(request, 'autherror.html')
@@ -199,12 +202,22 @@ def joinCourse(request):
             in_course = in_university.course_set.get(tag__exact=in_course_tag)
             in_course.members.add(request.user)
             in_course.save();
-            request.user.course_set.add(in_course)
-            request.user.save()
+
+            is_member = in_course.members.filter(email__exact=request.user.email)
+            is_owner = True if request.user.is_teacher == True and is_member is not None else False
+
+            if request.user.is_student == True:
+                request.user.student.classes.add(in_course)
+                request.user.student.save()
+            elif request.user.is_teacher == True:
+                request.user.teacher.classes.add(in_course)
+                request.user.teacher.save()
+
             context = {
                 'university' : in_university,
                 'course' : in_course,
                 'userInCourse': True,
+                'is_owner': is_owner
             }
             return render(request, 'course.html', context)
         else:
@@ -214,20 +227,92 @@ def joinCourse(request):
 def unjoinCourse(request):
     if request.user.is_authenticated():
         if request.user.is_student == True or request.user.is_teacher == True or request.user.is_admin == True:
-            in_university_name = request.GET.get('name', 'None')
-            in_university = models.University.objects.get(name__exact=in_university_name)
-            in_course_tag = request.GET.get('course', 'None')
-            in_course = in_university.course_set.get(tag__exact=in_course_tag)
-            in_course.members.remove(request.user)
-            in_course.save();
-            request.user.course_set.remove(in_course)
-            request.user.save()
-            context = {
-                'university' : in_university,
-                'course' : in_course,
-                'userInCourse': False,
-            }
-            return render(request, 'course.html', context)
+            user_id = request.GET.get('id', 'None')
+            user = None
+            userInCourse = True
+
+            try:
+                user = MyUser.objects.filter(id=user_id)[0]
+            except:
+                user = request.user
+                userInCourse = False
+            
+            if request.user.is_teacher == True:
+                in_university_name = request.GET.get('name', 'None')
+                in_university = models.University.objects.get(name__exact=in_university_name)
+                in_course_tag = request.GET.get('course', 'None')
+                in_course = in_university.course_set.get(tag__exact=in_course_tag)
+                in_course.members.remove(user)
+                in_course.save();
+
+                is_member = in_course.members.filter(email__exact=request.user.email)
+                is_owner = True if request.user.is_teacher == True and is_member is not None else False
+                
+                if user.is_student == True:
+                    user.student.classes.remove(in_course)
+                    user.student.save()
+                elif user.is_teacher == True:
+                    user.teacher.classes.remove(in_course)
+                    user.teacher.save()
+
+                context = {
+                    'university' : in_university,
+                    'course' : in_course,
+                    'userInCourse': userInCourse,
+                    'is_owner': is_owner
+                }
+                return render(request, 'course.html', context)
+            else:
+                return render(request, 'baseerror.html', { "message": "You do not have permission to remove students from courses." })
         else:
             return render(request, 'baseerror.html',  { "message": "You do not have permission to join courses." })
+    return render(request, 'autherror.html')
+
+def getCourseAddStudentForm(request):
+    if request.user.is_authenticated():
+        if request.user.is_teacher == True or request.user.is_admin == True:
+            course_tag = request.GET.get('tag', 'None')
+            course = models.Course.objects.get(tag__exact=course_tag)
+            is_member = course.members.filter(email__exact=request.user.email)
+
+            if not is_member:
+                return render(request, 'baseerror.html', { "message": "Only teachers of this group can add members." })
+            else:
+                context = {
+                    'tag': request.GET.get('tag', 'None'),
+                }
+                return render(request, 'courseaddstudentform.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to add members." })   
+    return render(request, 'autherror.html')
+
+def getCourseAddStudentFormSuccess(request):
+    if request.user.is_authenticated():
+        if request.user.is_teacher == True or request.user.is_admin == True:
+            if request.method == 'POST':
+                form = forms.CourseAddStudentForm(request.POST)
+                if form.is_valid():
+                    course_to_join = models.Course.objects.get(tag__exact=form.cleaned_data['tag'])
+
+                    try:
+                        user = models.MyUser.objects.get(email__exact=form.cleaned_data['email'])
+                        course_to_join.members.add(user)
+                        course_to_join.save()
+                        user.student.classes.add(course_to_join)
+                        user.student.save()
+                        context = {
+                            'tag': course_to_join.tag,
+                            'university_name': course_to_join.university.name,
+                            'email': form.cleaned_data['email'],
+                            'is_owner': True
+                        }
+                        return render(request, 'courseaddstudentformsuccess.html', context)
+                    except ObjectDoesNotExist:
+                        return render(request, 'courseaddstudentform.html', { 'error': 'Error: That user does not exist!' })
+            else:
+                form = forms.GroupForm()
+            return render(request, 'courseaddstudentform.html')
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to add students." })
+    # render error page if user is not logged in
     return render(request, 'autherror.html')
