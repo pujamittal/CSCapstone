@@ -143,6 +143,7 @@ class Engineer(models.Model):
     about = models.CharField(max_length=500, null=True, blank=True)
     almamater = models.ForeignKey("UniversitiesApp.University", related_name="almamater", null=True)
     company = models.ForeignKey("CompaniesApp.Company", related_name="engineer_company", null=True)
+    projects = models.ManyToManyField("ProjectsApp.Project", related_name="engineer_projects", null=True)
 
     def get_full_name(self):        
         return "%s %s" %(self.user.first_name, self.user.last_name)

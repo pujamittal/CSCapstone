@@ -53,6 +53,10 @@ def getCreateProject(request):
                         created_by=request.user
                     )
                     new_project.save()
+
+                    request.user.engineer.projects.add(new_project)
+                    request.user.engineer.save()
+                    
                     context = {
                         'name' : form.cleaned_data['name'],
                         'project_id' : new_project.project_id

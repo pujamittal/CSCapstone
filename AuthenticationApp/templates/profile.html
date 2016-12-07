@@ -84,6 +84,25 @@
 				</table>
 			</div>
 		{% endif %}
+		{% if user.is_engineer == True %}
+			<h1>Projects</h1>
+			<div class="table-responsive">
+				<table class="table table-striped sortable">
+					<thead>
+						<tr>
+							<th>Project Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for project in projects.all %}
+							<tr>
+								<td><p><a href="/project?id={{ project.project_id }}">{{ project }}</a></p></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
 		<h1>Bookmarks</h1>
 		<div class="table-reonsive">
 			<table class="table table-striped sortable">

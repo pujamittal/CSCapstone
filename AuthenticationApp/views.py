@@ -165,11 +165,14 @@ def view_profile(request):
                 "classes": user.teacher.classes
             }
         elif user.is_engineer == True:
+            # TODO: Find all projects of this engineer
+
             usertype = "Engineer"
             context = {
                 "user": user, 
                 "bookmarks": user.bookmarks,
-                "usertype": usertype
+                "usertype": usertype,
+                "projects": user.engineer.projects
             }
 
         if user.is_admin == True and request.user.is_admin == True:
