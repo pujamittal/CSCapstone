@@ -6,14 +6,23 @@
 	<div class="container theme-showcase" role="main">
 		<div class="jumbotron">
 			<h1>{{ group.name }}</h1>
+			<h2><strong>Project: </strong>
+			{% if group.project.name is None %}
+				<a href="/group/assignproject?group_pk={{ group.pk }}" class="btn btn-default">Assign a Project</a>
+			{% else %}
+				<a href="/project?id={{ group.project.project_id }}">{{ group.project }}</a>
+			{% endif %}
+			</h2>
 			<p>{{ group.description }}</p>
 			{% if userIsMember %}
-            <a href="/group/addmember?name={{ group.name }}" class="btn btn-default">Add member</a>
-			<a href="/group/unjoin?name={{ group.name }}" class="btn btn-default">Unjoin this Group</a>
+				<a href="/group/unjoin?name={{ group.name }}" class="btn btn-default">Unjoin this Group</a>
+            	<a href="/group/addmember?name={{ group.name }}" class="btn btn-default">Add member</a>
 			{% else %}
-			<a href="/group/join?name={{ group.name }}" class="btn btn-default">Join this Group</a>
+				<a href="/group/join?name={{ group.name }}" class="btn btn-default">Join this Group</a>
 			{% endif %}
-
+			{% if group.project.name is not None %}
+				<a href="/group/dropproject?id={{ group.id }}" class="btn btn-default">Drop Project</a>
+			{% endif %}
 		</div>
 	</div>
 	
@@ -27,9 +36,9 @@
 				</thead>
 				<tbody>
 					{% for item in group.members.all %}
-					<tr>
-						<td>{{ item.get_full_name }}</td>
-					</tr>
+						<tr>
+							<td>{{ item.get_full_name }}</td>
+						</tr>
 					{% endfor %}
 				</tbody>
 			</table>

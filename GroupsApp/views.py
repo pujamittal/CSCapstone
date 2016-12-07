@@ -151,3 +151,55 @@ def getGroupAddMemberFormSuccess(request):
             return render(request, 'baseerror.html', { "message": "You do not have permission to add members." })
     # render error page if user is not logged in
     return render(request, 'autherror.html')
+
+def getGroupAssignProjectForm(request):
+    if request.user.is_authenticated():
+        if request.user.is_student == True or request.user.is_admin == True:
+            group_pk = request.GET.get('group_pk', 'None')
+            group = models.Group.objects.get(pk__exact=group_pk)
+            is_member = group.members.filter(email__exact=request.user.email)
+
+            if not is_member:
+                return render(request, 'baseerror.html', {"message": "Only members of this group can assign projects." })
+            else:
+                form = forms.GroupAssignProjectForm(request.POST or None)
+
+                if form.is_valid():
+                    group.project = form.cleaned_data['project']
+                    group.save()
+
+                    context = {
+                        'group' : group,
+                        'userIsMember': is_member,
+                    }
+                    return render(request, 'group.html', context)
+
+                context = {
+                    "form": form
+                }
+                return render(request, 'groupassignprojectform.html', context)
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to assign projects." })   
+    return render(request, 'autherror.html')
+
+def dropProject(request):
+    if request.user.is_authenticated():
+        if request.user.is_student == True or request.user.is_admin == True:
+            group_id = request.GET.get('id', 'None')
+            group = models.Group.objects.get(id__exact=group_id)
+            is_member = group.members.filter(email__exact=request.user.email)
+
+            if is_member:
+                group.project = None
+                group.save()
+
+                context = {
+                    'group' : group,
+                    'userIsMember': is_member,
+                }
+                return render(request, 'group.html', context)
+            else:
+                return render(request, 'baseerror.html', { "message": "Only members of this group can drop projects." })
+        else:
+            return render(request, 'baseerror.html', { "message": "You do not have permission to drop projects." })   
+    return render(request, 'autherror.html')

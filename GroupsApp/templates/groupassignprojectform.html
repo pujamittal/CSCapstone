@@ -1,0 +1,15 @@
+{% extends "body.html" %}
+
+{% block content %}
+
+<div class="container" role="main">
+    <div class="panel panel-default">
+        <pre><h1><strong>Assign Project</strong></h1></pre>
+        <form method="POST" class="panel-body validate"> {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class='btn btn-primary' value="Submit">
+        </form>
+    </div>
+</div>
+
+{% endblock %}
