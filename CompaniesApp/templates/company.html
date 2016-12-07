@@ -9,9 +9,9 @@
 			<p>{{ company.description }}</p>
             <h5><a target="_blank" href="{{ company.website }}">Website</a></h5>
             {% if userIsMember %}
-            <a href="/company/unjoin?name={{ company.name }}" class="btn btn-default">Unjoin this Company</a>
+                <a href="/company/unjoin?name={{ company.name }}" class="btn btn-default">Unjoin this Company</a>
             {% else %}
-            <a href="/company/join?name={{ company.name }}" class="btn btn-default">Join this Company</a>
+                <a href="/company/join?name={{ company.name }}" class="btn btn-default">Join this Company</a>
             {% endif %}
 		</div>
     </div>
@@ -20,14 +20,14 @@
                 <table class="table table-striped sortable">
                     <thead>
                         <tr>
-                            <th>Users</th>
+                            <th>Engineers</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in company.members.all %}
-                        <tr>
-                            <td>{{ item.get_full_name }}</td>
-                        </tr>
+                            <tr>
+                                <td><a href="/profile?id={{ item.id }}">{{ item.get_full_name }}</a></td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>
