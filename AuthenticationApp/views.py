@@ -12,6 +12,7 @@ from django.contrib import messages
 
 from .forms import LoginForm, RegisterForm, UpdateForm
 from .models import MyUser, Student, Teacher, Engineer
+from CompaniesApp.models import Company
 
 def auth_login(request):
     form = LoginForm(request.POST or None)
@@ -84,6 +85,12 @@ def auth_register(request):
             new_engineer.almamater = form.cleaned_data['almamater']
             new_engineer.company = form.cleaned_data['company']
             new_engineer.save()
+
+            # in_name = request.GET.get('name', 'None')
+            in_company = form.cleaned_data['company'] #Company.objects.get(id=form.cleaned_data['company'])
+            in_company.members.add(new_user)
+            in_company.save();
+
             login(request, new_user);
             messages.success(request, 'Success! Your engineer account was created.')
             return render(request, 'index.html')

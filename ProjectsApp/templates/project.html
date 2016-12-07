@@ -11,6 +11,7 @@
 				<li>Sponsored by {{ project.company }}</li>
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
+				<li>Created by {{ project.created_by.get_full_name }}</li>
 			</ul>
 			<a href="/bookmark/add?project_id={{ project_id }}" class="btn btn-default">Add Bookmark</a>
 			{% if is_owner == True %}
