@@ -14,7 +14,7 @@
 						<th>Project Name</th>
 						<th>Company</th>
 						<th>Language</th>
-						<th>Experience</th>
+						<th>Experience (in Years)</th>
 						<th>Description</th>
 					</tr>
 				</thead>
@@ -22,7 +22,7 @@
 					{% for project in projects %} 
 					<tr>
 						<td><a href="/project?id={{ project.project_id }}">{{ project.name }}</a></td>
-						<td>{{ project.company }}</td>
+						<td><a href="/company?name={{ project.company }}">{{ project.company }}</a></td>
 						<td>{{ project.language }}</td>
 						<td>{{ project.experience }}</td>
 						<td>{{ project.description }}</td>

@@ -86,8 +86,7 @@ def auth_register(request):
             new_engineer.company = form.cleaned_data['company']
             new_engineer.save()
 
-            # in_name = request.GET.get('name', 'None')
-            in_company = form.cleaned_data['company'] #Company.objects.get(id=form.cleaned_data['company'])
+            in_company = form.cleaned_data['company']
             in_company.members.add(new_user)
             in_company.save();
 

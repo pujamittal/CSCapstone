@@ -122,6 +122,23 @@ def getBookmarkSuccess(request):
         context = { 
             "name": proj.name,
             "project_id": project_id_to_bookmark,
+            "isBookmarked": True
         }
 
-        return render(request, 'bookmark_success.html', context)    
+        return render(request, 'bookmark_success.html', context)
+    return render(request, 'autherror.html')
+
+def unBookmark(request):
+    if request.user.is_authenticated():
+        project_id_to_bookmark = request.GET.get('project_id', 'None')
+        proj = Project.objects.get(pk=project_id_to_bookmark)
+        request.user.bookmarks.remove(proj)
+        request.user.save()
+        # context = { 
+        #     "name": proj.name,
+        #     "project_id": project_id_to_bookmark,
+        #     "isBookmarked": False
+        # }
+
+        return render(request, 'remove_bookmark_success.html')
+    return render(request, 'autherror.html')
