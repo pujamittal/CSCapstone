@@ -87,6 +87,8 @@ class Student(models.Model):
     groups = models.ManyToManyField("GroupsApp.Group")
     classes = models.ManyToManyField("UniversitiesApp.Course", related_name="student_courses")
 
+    skills = models.CharField(max_length=120, null=True, blank=True)
+
     def get_full_name(self):        
         return "%s %s" %(self.user.first_name, self.user.last_name)
 
