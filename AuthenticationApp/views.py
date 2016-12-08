@@ -12,6 +12,7 @@ from django.contrib import messages
 
 from .forms import LoginForm, RegisterForm, UpdateForm
 from .models import MyUser, Student, Teacher, Engineer
+from CompaniesApp.models import Company
 
 def auth_login(request):
     form = LoginForm(request.POST or None)
@@ -58,6 +59,7 @@ def auth_register(request):
             new_user.is_student = True
             new_user.save()         
             new_student = Student(user=new_user, university=form.cleaned_data['university'])
+            new_student.skills=form.cleaned_data['skills']
             new_student.save()
             login(request, new_user);   
             messages.success(request, 'Success! Your student account was created.')
@@ -84,6 +86,11 @@ def auth_register(request):
             new_engineer.almamater = form.cleaned_data['almamater']
             new_engineer.company = form.cleaned_data['company']
             new_engineer.save()
+
+            in_company = form.cleaned_data['company']
+            in_company.members.add(new_user)
+            in_company.save();
+
             login(request, new_user);
             messages.success(request, 'Success! Your engineer account was created.')
             return render(request, 'index.html')

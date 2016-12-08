@@ -8,13 +8,20 @@
 			<h1>{{ project }}</h1>
 			<p>{{ project.description }}</p>
 			<ul>
-				<li>Sponsored by {{ project.company }}</li>
+				<li>Sponsored by <a href="/company?name={{ project.company }}">{{ project.company }}</a></li>
 				<li>Developed in {{ project.language }}</li>
 				<li>Years of Experience Needed: {{ project.experience }}</li>
+				<li>Created by <a href="/profile?id={{ project.created_by.id }}">{{ project.created_by.get_full_name }}</a></li>
 			</ul>
-			<a href="/bookmark/add?project_id={{ project_id }}" class="btn btn-default">Add Bookmark</a>
+
+            <a href="/bookmark/add?project_id={{ project_id }}" class="btn btn-default">Add Bookmark</a>
+            <a href="/bookmark/remove?project_id={{ project_id }}" class="btn btn-default">Remove Bookmark</a>
+
+
 			{% if is_owner == True %}
 				<a href="/project/edit?id={{ project_id }}" class="btn btn-default">Edit Project</a>
+				<a href="/project/delete?project_id={{ project_id }}" class="btn btn-default">Delete Project</a>
+
 			{% endif %}
 			<!-- add in an UNDO for bookmarks -->
 		</div>

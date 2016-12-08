@@ -26,6 +26,8 @@ class RegisterForm(forms.Form):
     almamater = forms.ModelChoiceField(label="Almamater", queryset=University.objects.all(), required=False)
     about = forms.CharField(label="About", widget=forms.Textarea, required=False)
 
+    skills = forms.CharField(label="Skills", widget=forms.TextInput, required=False)
+
     def clean_password2(self):
         # Check that the two password entries match
         password1 = self.cleaned_data.get("password1")

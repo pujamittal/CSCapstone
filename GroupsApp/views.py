@@ -22,9 +22,19 @@ def getGroup(request):
         in_name = request.GET.get('name', 'None')
         in_group = models.Group.objects.get(name__exact=in_name)
         is_member = in_group.members.filter(email__exact=request.user.email)
+        skill = str(in_group.get_best_member_skill())
+
+        try:
+            projects = models.Project.objects.filter(language=skill)
+        except models.Project.DoesNotExist:
+            projects = None
+
+
         context = {
             'group' : in_group,
             'userIsMember': is_member,
+            'best_skill': skill,
+            'projects': projects
         }
         return render(request, 'group.html', context)
     # render error page if user is not logged in
