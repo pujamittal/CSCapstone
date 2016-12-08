@@ -11,6 +11,8 @@ $(document).ready(function() {
             $("label[for='id_university']").show();
             $("#id_company").hide();
             $("label[for='id_company']").hide();
+            $("#id_skills").show();
+            $("label[for='id_skills']").show();
         }
         else if (radio_value == 'Teacher') {
             $("#id_almamater").hide();
@@ -21,6 +23,8 @@ $(document).ready(function() {
             $("label[for='id_university']").show();
             $("#id_company").hide();
             $("label[for='id_company']").hide();
+            $("#id_skills").hide();
+            $("label[for='id_skills']").hide();
         }
         else if (radio_value == 'Engineer') {
             $("#id_almamater").show();
@@ -31,6 +35,8 @@ $(document).ready(function() {
             $("label[for='id_university']").hide();
             $("#id_company").show();
             $("label[for='id_company']").show();
+            $("#id_skills").hide();
+            $("label[for='id_skills']").hide();
         }
     });
 
@@ -42,4 +48,6 @@ $(document).ready(function() {
     $("label[for='id_university']").hide();
     $("#id_company").hide();
     $("label[for='id_company']").hide();
+    $("#id_skills").hide();
+    $("label[for='id_skills']").hide();
 });

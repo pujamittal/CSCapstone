@@ -31,18 +31,49 @@
 			<table class="table table-striped sortable">
 				<thead>
 					<tr>
-						<th>Users</th>
+						<th>User</th>
+						<th>Skills</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for item in group.members.all %}
 						<tr>
 							<td>{{ item.get_full_name }}</td>
+							<td>{{ item.student.skills }}</td>
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
+        <hr>
 		</div>
+            <p>The most common skill for this group is: <b>{{ best_skill }}</b>. Based on that, we suggest these projects:</p>
+
+        <div class="table-responsive">
+			<table class="table table-striped sortable">
+				<thead>
+					<tr>
+						<th>Project Name</th>
+						<th>Company</th>
+						<th>Language</th>
+						<th>Experience</th>
+						<th>Description</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for project in projects %}
+					<tr>
+						<td><a href="/project?id={{ project.project_id }}">{{ project.name }}</a></td>
+						<td>{{ project.company }}</td>
+						<td>{{ project.language }}</td>
+						<td>{{ project.experience }}</td>
+						<td>{{ project.description }}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+
+
 	</div>
 
 {% endblock %}
