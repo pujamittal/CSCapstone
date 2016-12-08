@@ -1,4 +1,5 @@
 """AuthenticationApp Forms
+from __future__ import absolute_import
 
 Created by Naman Patwari on 10/4/2016.
 """
@@ -45,3 +46,12 @@ class ProjectEditForm(forms.ModelForm):
         labels = {
             'experience' : 'Years of Experience'
         }
+
+
+
+
+from ckeditor.fields import RichTextFormField
+
+
+class CkEditorForm(forms.Form):
+    comment = RichTextFormField()

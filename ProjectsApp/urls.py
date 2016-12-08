@@ -9,6 +9,7 @@ from . import views
 urlpatterns = [
     url(r'^project/all$', views.getProjects, name='Projects'),
     url(r'^project$', views.getProject, name='Project'),
+    url(r'^project/comment$', views.commentProject, name='commentProject'),
     url(r'^create_project$', views.getCreateProject, name='Create Project'),
     url(r'^bookmark/add$', views.getBookmarkSuccess, name='Bookmark Success'),
     url(r'^project/edit$', views.getEditProject, name='Edit Project'),
