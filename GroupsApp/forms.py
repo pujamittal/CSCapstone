@@ -16,3 +16,10 @@ class GroupAddMemberForm(forms.Form):
 
 class GroupAssignProjectForm(forms.Form):
     project = forms.ModelChoiceField(label="Project", queryset=Project.objects.all(), required=True)
+
+
+from ckeditor.fields import RichTextFormField
+
+
+class CkEditorForm(forms.Form):
+    comment = RichTextFormField()
