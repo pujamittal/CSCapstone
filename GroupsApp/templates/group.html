@@ -79,6 +79,9 @@
                         <div class="well">
                             <i style="color: #ff9933">{{ c.user.get_full_name }} on {{ c.created | date:"M d, Y, h:m" }}</i>: {% autoescape off %}{{ c.comment }}{% endautoescape %}
                         </div>
+               {% if me == c.user.id %}
+                    <a href="/groupcommentdelete?id={{ c.comment_id }}&rdr={{ group.name }}">delete</a>
+               {% endif %}
                 <hr>
             {% endfor %}
 
