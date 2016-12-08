@@ -30,7 +30,6 @@ def commentProject(request):
     # project.save();
     return HttpResponseRedirect('/project?id=%s' % project_id)
 
-    return None
 def getProject(request):
     project_id = int(request.GET.get('id'))
     project = Project.objects.filter(project_id=project_id)[0]
