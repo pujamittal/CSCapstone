@@ -75,6 +75,23 @@ def getCreateProject(request):
         else:
             return render(request, 'baseerror.html', { "message": "Only engineers can create projects." })
 
+def deleteProject(request):
+    if request.user.is_authenticated():
+        if request.user.is_engineer == True or request.user.is_admin == True:
+            project_id_to_delete = request.GET.get('project_id', 'None')
+
+            try:
+                proj = Project.objects.get(project_id=project_id_to_delete)
+                if proj.created_by.id == request.user.id:
+                    proj.delete()
+            except Project.DoesNotExist:
+                proj = None
+            
+            return render(request, 'project_delete_success.html')
+            
+        else:
+            return render(request, 'baseerror.html', { "message": "Only engineers can delete projects." })                
+
 def getEditProject(request):
     if request.user.is_authenticated():
         if request.user.is_engineer == True or request.user.is_admin == True:
@@ -95,7 +112,7 @@ def getEditProject(request):
 
                         context = {
                             'name': form.cleaned_data['name'],
-                            'project_id': project.project_id,
+                            'project_id': project_id,
                             'status': 'updated'
                         }
                         return render(request, 'projectformsuccess.html', context)
