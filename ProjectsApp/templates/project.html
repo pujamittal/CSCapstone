@@ -25,6 +25,22 @@
 			{% endif %}
 			<!-- add in an UNDO for bookmarks -->
 		</div>
+    <div class="panel panel-default">
+
+        <h2>Comments</h2>
+        {% for c in comments %}
+					<div class="well">{% autoescape off %}{{ c.comment }}{% endautoescape %}</div>
+            <hr>
+        {% endfor %}
+
+        <h2>Add a comment:</h2>
+		<form method="POST" action="/project/comment?id={{ project_id }}" class="panel-body validate"> {% csrf_token %}
+             {{ form.media }}
+
+			{{ form.as_p }}
+			<input type="submit" class='btn btn-primary' value="comment">
+		</form>
+	</div>
 	</div>
 
 {% endblock %}

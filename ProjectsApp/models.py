@@ -2,7 +2,10 @@
 
 Created by Harris Christiansen on 10/02/16.
 """
+from __future__ import absolute_import
+
 from django.db import models
+from ckeditor.fields import RichTextField
 
 class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
@@ -20,5 +23,11 @@ class Project(models.Model):
     experience = models.CharField(max_length = 3, null=True)
     speciality = models.CharField(max_length = 50, null=True)
 
+    def __str__(self):
+        return self.name
+class ProjectComment(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    comment = RichTextField(config_name='awesome_ckeditor')
     def __str__(self):
         return self.name

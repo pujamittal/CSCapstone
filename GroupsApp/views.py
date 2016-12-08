@@ -3,6 +3,7 @@ Created by Naman Patwari on 10/10/2016.
 """
 from django.shortcuts import render
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 
 from . import models
 from . import forms
@@ -17,6 +18,17 @@ def getGroups(request):
     # render error page if user is not logged in
     return render(request, 'autherror.html')
 
+def commentGroup(request):
+    group_id = int(request.GET.get('id'))
+    group = models.Group.objects.filter(id=group_id)[0]
+    # form = CreateProjectForm(request.POST)
+    comment = models.GroupComment(group=group,comment=request.POST.get('comment', 'None'),user=request.user)
+    comment.save()
+
+    return HttpResponseRedirect('/group?name=%s' % group.name)
+
+
+
 def getGroup(request):
     if request.user.is_authenticated():
         in_name = request.GET.get('name', 'None')
@@ -29,12 +41,17 @@ def getGroup(request):
         except models.Project.DoesNotExist:
             projects = None
 
+        comments = models.GroupComment.objects.filter(group_id=in_group.id)
+
 
         context = {
             'group' : in_group,
             'userIsMember': is_member,
             'best_skill': skill,
-            'projects': projects
+            'projects': projects,
+            'comments': comments,
+            'me': request.user.id,
+            'form': forms.CkEditorForm(request.POST or None)
         }
         return render(request, 'group.html', context)
     # render error page if user is not logged in
@@ -213,3 +230,13 @@ def dropProject(request):
         else:
             return render(request, 'baseerror.html', { "message": "You do not have permission to drop projects." })   
     return render(request, 'autherror.html')
+
+
+def groupCommentDelete(request):
+    group_name = request.GET.get('rdr', 'None')
+    comment_id = request.GET.get('id', 'None')
+
+    comm = models.GroupComment.objects.get(comment_id=comment_id)
+    comm.delete()
+    return HttpResponseRedirect('/group?name=%s' % group_name)
+

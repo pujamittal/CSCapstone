@@ -4,8 +4,10 @@ Created by Harris Christiansen on 10/02/16.
 """
 from django.shortcuts import render
 
-from .forms import CreateProjectForm, ProjectEditForm
-from .models import Project
+from django.http import HttpResponseRedirect
+
+from .forms import CreateProjectForm, ProjectEditForm, CkEditorForm
+from .models import Project, ProjectComment
 
 def getProjects(request):
     projects_list = []
@@ -17,6 +19,17 @@ def getProjects(request):
         'projects': projects_list,
     })
 
+def commentProject(request):
+    project_id = int(request.GET.get('id'))
+    project = Project.objects.filter(project_id=project_id)[0]
+    # form = CreateProjectForm(request.POST)
+    comment = ProjectComment(project=project,comment=request.POST.get('comment', 'None'))
+    comment.save()
+
+    # project.comments.add(comment)
+    # project.save();
+    return HttpResponseRedirect('/project?id=%s' % project_id)
+
 def getProject(request):
     project_id = int(request.GET.get('id'))
     project = Project.objects.filter(project_id=project_id)[0]
@@ -24,16 +37,21 @@ def getProject(request):
     print(owner)
     is_owner = False
 
+    comments = ProjectComment.objects.filter(project_id=project_id)
     print(owner.id)
     print(request.user.id)
 
     if owner.id == request.user.id:
         is_owner = True
 
+    form = CkEditorForm(request.POST or None)
+
     context = {
         "project": project,
         "project_id": project_id,
-        "is_owner": is_owner
+        "is_owner": is_owner,
+        "form": form,
+        "comments": comments
     }
     return render(request, 'project.html', context)
 

@@ -8,6 +8,8 @@ from . import views
 
 urlpatterns = [
     url(r'^group/all$', views.getGroups, name='Groups'),
+    url(r'^groupcommentdelete$', views.groupCommentDelete, name='groupCommentDelete'),
+    url(r'^group/comment$', views.commentGroup, name='commentGroup'),
 	url(r'^group/form$', views.getGroupForm, name='GroupForm'),
     url(r'^group/formsuccess$', views.getGroupFormSuccess, name='GroupFormSuccess'),
     url(r'^group/join$', views.joinGroup, name='GJoin'),

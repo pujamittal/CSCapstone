@@ -72,7 +72,27 @@
 				</tbody>
 			</table>
 		</div>
+        <div class="panel panel-default">
 
+            <h2>Comments</h2>
+            {% for c in comments %}
+                        <div class="well">
+                            <i style="color: #ff9933">{{ c.user.get_full_name }} on {{ c.created | date:"M d, Y, h:m" }}</i>: {% autoescape off %}{{ c.comment }}{% endautoescape %}
+                        </div>
+               {% if me == c.user.id %}
+                    <a href="/groupcommentdelete?id={{ c.comment_id }}&rdr={{ group.name }}">delete</a>
+               {% endif %}
+                <hr>
+            {% endfor %}
+
+            <h2>Add a comment:</h2>
+            <form method="POST" action="/group/comment?id={{ group.id }}" class="panel-body validate"> {% csrf_token %}
+                 {{ form.media }}
+
+                {{ form.as_p }}
+                <input type="submit" class='btn btn-primary' value="comment">
+            </form>
+        </div>
 
 	</div>
 
