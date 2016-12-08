@@ -50,6 +50,7 @@ def getGroup(request):
             'best_skill': skill,
             'projects': projects,
             'comments': comments,
+            'me': request.user.id,
             'form': forms.CkEditorForm(request.POST or None)
         }
         return render(request, 'group.html', context)
@@ -229,3 +230,13 @@ def dropProject(request):
         else:
             return render(request, 'baseerror.html', { "message": "You do not have permission to drop projects." })   
     return render(request, 'autherror.html')
+
+
+def groupCommentDelete(request):
+    group_name = request.GET.get('rdr', 'None')
+    comment_id = request.GET.get('id', 'None')
+
+    comm = models.GroupComment.objects.get(comment_id=comment_id)
+    comm.delete()
+    return HttpResponseRedirect('/group?name=%s' % group_name)
+
